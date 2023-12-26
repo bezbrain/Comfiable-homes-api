@@ -5,6 +5,8 @@ require("express-async-errors");
 const NotFoundMiddleware = require("./middleware/not-found");
 const ErrorHandlerMiddleware = require("./middleware/error-handler");
 const authRouter = require("./routes/auth.route");
+const productRouter = require("./routes/products.route");
+const authMiddleware = require("./middleware/auth");
 
 const app = express();
 
@@ -15,7 +17,8 @@ app.get("/", (req, res) => {
   res.send("This is the home page");
 });
 
-app.use("/api/v1", authRouter);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/products", authMiddleware, productRouter);
 
 app.use(NotFoundMiddleware);
 app.use(ErrorHandlerMiddleware);
