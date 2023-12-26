@@ -2,6 +2,13 @@ const express = require("express");
 const connectDB = require("./db/connect");
 require("dotenv").config();
 require("express-async-errors");
+
+// Security
+const helmet = require("helmet");
+const cors = require("cors");
+const xss = require("xss-clean");
+const rateLimiter = require("express-rate-limit");
+
 const NotFoundMiddleware = require("./middleware/not-found");
 const ErrorHandlerMiddleware = require("./middleware/error-handler");
 const authRouter = require("./routes/auth.route");
@@ -9,6 +16,19 @@ const productRouter = require("./routes/products.route");
 const authMiddleware = require("./middleware/auth");
 
 const app = express();
+
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+    standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+    // store: ... , // Use an external store for consistency across multiple server instances.
+  })
+);
+app.use(helmet());
+app.use(cors());
+app.use(xss());
 
 // Use this middleware to make sure that the body is available on req.body
 app.use(express.json());
