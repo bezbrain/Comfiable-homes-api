@@ -6,10 +6,32 @@ const ErrorHandlerMiddleware = async (err, req, res, next) => {
     statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
   };
 
-  return res.status(customError.statusCode).json({
+  // Handle validation error
+  if (err.name === "ValidationError") {
+    const errorValue = Object.values(err.errors)
+      .map((each) => each.message)
+      .join(", ");
+    // console.log(errorValue);
+    customError.message = errorValue;
+    customError.statusCode = StatusCodes.BAD_REQUEST;
+  }
+
+  // Handle cast error, that is, when a value has already existed in the db
+  if (err.code === 11000) {
+    const errorValue = Object.keys(err.keyValue)[0];
+    // console.log(errorValue);
+    customError.message = `${errorValue} needs to the unique. Please try another value`;
+    customError.statusCode = StatusCodes.BAD_REQUEST;
+  }
+
+  res.status(customError.statusCode).json({
     success: false,
     message: customError.message,
   });
+  // res.status(customError.statusCode).json({
+  //   success: false,
+  //   message: err,
+  // });
 };
 
 module.exports = ErrorHandlerMiddleware;
