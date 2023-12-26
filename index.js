@@ -1,9 +1,10 @@
 const express = require("express");
 const connectDB = require("./db/connect");
-const NotFoundMiddleware = require("./middleware/not-found");
-const ErrorHandlerMiddleware = require("./middleware/error-handler");
 require("dotenv").config();
 require("express-async-errors");
+const NotFoundMiddleware = require("./middleware/not-found");
+const ErrorHandlerMiddleware = require("./middleware/error-handler");
+const authRouter = require("./routes/auth.route");
 
 const app = express();
 
@@ -13,6 +14,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("This is the home page");
 });
+
+app.use("/api/v1", authRouter);
 
 app.use(NotFoundMiddleware);
 app.use(ErrorHandlerMiddleware);
