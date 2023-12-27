@@ -9,6 +9,11 @@ const cors = require("cors");
 const xss = require("xss-clean");
 const rateLimiter = require("express-rate-limit");
 
+// Swagger
+const swaggerUI = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDocs = YAML.load("./swagger.yaml");
+
 const NotFoundMiddleware = require("./middleware/not-found");
 const ErrorHandlerMiddleware = require("./middleware/error-handler");
 const authRouter = require("./routes/auth.route");
@@ -34,8 +39,11 @@ app.use(xss());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("This is the home page");
+  res.send("<h2>Home page</h2><a href='/comfiable-homes-docs'>Go To Docs</a>");
 });
+
+// Serve the docs
+app.use("/comfiable-homes-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/products", authMiddleware, productRouter);
