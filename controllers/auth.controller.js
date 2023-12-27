@@ -3,6 +3,9 @@ const { StatusCodes } = require("http-status-codes");
 const BadRequestError = require("../errors/bad-request");
 const UnauthenticatedError = require("../errors/unauthenticated");
 
+let revokedTokens = [];
+
+// REGISTER USER
 const register = async (req, res) => {
   const user = await UserCollection.create(req.body);
   const token = user.createJWT();
@@ -14,6 +17,7 @@ const register = async (req, res) => {
   });
 };
 
+// LOGIN USER
 const login = async (req, res) => {
   const {
     body: { email, password },
@@ -44,4 +48,25 @@ const login = async (req, res) => {
   });
 };
 
-module.exports = { register, login };
+// LOGOUT USER
+const logout = async (req, res) => {
+  const {
+    headers: { authorization },
+  } = req;
+
+  if (!authorization) {
+    throw new BadRequestError("Logout was not successful");
+  }
+
+  const extractToken = authorization.split(" ")[1];
+
+  revokedTokens.push(extractToken);
+  revokedTokens = []; // This is to make sure the previous token remove before adding new token to the array
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: "Logout successful",
+  });
+};
+
+module.exports = { register, login, logout, revokedTokens };
