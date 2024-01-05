@@ -2,8 +2,8 @@ const { Schema, model, Types } = require("mongoose");
 
 const CartSchema = new Schema(
   {
-    id: {
-      type: Number,
+    productId: {
+      type: String,
       required: [true, "id must be provided"],
     },
     image: {
