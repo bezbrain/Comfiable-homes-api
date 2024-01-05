@@ -18,6 +18,7 @@ const NotFoundMiddleware = require("./middleware/not-found");
 const ErrorHandlerMiddleware = require("./middleware/error-handler");
 const authRouter = require("./routes/auth.route");
 const productRouter = require("./routes/products.route");
+const cartRouter = require("./routes/cart.route");
 const authMiddleware = require("./middleware/auth");
 
 const app = express();
@@ -47,6 +48,7 @@ app.use("/comfiable-homes-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/products", authMiddleware, productRouter);
+app.use("/api/v1", authMiddleware, cartRouter);
 
 app.use(NotFoundMiddleware);
 app.use(ErrorHandlerMiddleware);

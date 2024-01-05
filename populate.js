@@ -15,7 +15,6 @@ const startDB = async () => {
     await connectDB(process.env.MONGO_URI);
     await ProductCollection.deleteMany();
     await ProductCollection.create(productData);
-    // app.listen(port, console.log(`Server is listening on port ${port}`));
     process.exit(0);
   } catch (error) {
     console.log(error);
