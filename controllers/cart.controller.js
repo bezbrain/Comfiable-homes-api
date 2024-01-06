@@ -11,13 +11,18 @@ const addToCart = async (req, res) => {
 
   req.body.createdBy = userId;
 
-  const checkId = await ProductCollection.findOne({ _id: productId });
-  // // Check if id is available in all product
+  const checkId = await ProductCollection.findOne({
+    _id: productId,
+  });
+  // // Check if id is available in any product
   if (!checkId) {
     throw new NotFoundError(`Product with the id ${productId} not found`);
   }
 
-  const searchCart = await CartCollection.findOne({ productId });
+  const searchCart = await CartCollection.findOne({
+    productId,
+    createdBy: userId,
+  });
   // Check if cart is already present in cart
   if (searchCart) {
     return res.status(StatusCodes.CONFLICT).json({
