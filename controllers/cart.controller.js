@@ -10,7 +10,7 @@ const addToCart = async (req, res) => {
   req.body.createdBy = userId;
 
   const searchCart = await CartCollection.findOne({ productId });
-
+  // Check if cart is already present in cart
   if (searchCart) {
     return res.status(StatusCodes.CONFLICT).json({
       success: true,
