@@ -3,6 +3,7 @@ const ProductCollection = require("../models/Product");
 const { StatusCodes } = require("http-status-codes");
 const NotFoundError = require("../errors/not-found");
 
+// ADD TO CART
 const addToCart = async (req, res) => {
   const {
     user: { userId },
@@ -40,6 +41,24 @@ const addToCart = async (req, res) => {
   });
 };
 
+// GET ALL ITEMS IN CART
+const getItems = async (req, res) => {
+  const {
+    user: { userId },
+  } = req;
+  const items = await CartCollection.find({ createdBy: userId });
+  if (items.length === 0) {
+    throw new NotFoundError("No item found in cart");
+  }
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: "All items",
+    count: items.length,
+    items,
+  });
+};
+
 module.exports = {
   addToCart,
+  getItems,
 };
