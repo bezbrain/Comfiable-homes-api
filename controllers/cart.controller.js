@@ -1,5 +1,7 @@
 const CartCollection = require("../models/Cart");
+const ProductCollection = require("../models/Product");
 const { StatusCodes } = require("http-status-codes");
+const NotFoundError = require("../errors/not-found");
 
 const addToCart = async (req, res) => {
   const {
@@ -8,6 +10,12 @@ const addToCart = async (req, res) => {
   } = req;
 
   req.body.createdBy = userId;
+
+  const checkId = await ProductCollection.findOne({ _id: productId });
+  // // Check if id is available in all product
+  if (!checkId) {
+    throw new NotFoundError(`Product with the id ${productId} not found`);
+  }
 
   const searchCart = await CartCollection.findOne({ productId });
   // Check if cart is already present in cart
