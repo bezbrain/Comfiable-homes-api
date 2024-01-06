@@ -47,7 +47,7 @@ app.get("/", (req, res) => {
 app.use("/comfiable-homes-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1", authMiddleware, productRouter);
+app.use("/api/v1", productRouter);
 app.use("/api/v1", authMiddleware, cartRouter);
 
 app.use(NotFoundMiddleware);
