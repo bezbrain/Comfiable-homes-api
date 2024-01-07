@@ -3,6 +3,7 @@ const ProductCollection = require("../models/Product");
 const { StatusCodes } = require("http-status-codes");
 const NotFoundError = require("../errors/not-found");
 const ConflictError = require("../errors/conflict");
+const UnauthenticatedError = require("../errors/unauthenticated");
 
 // ADD TO CART
 const addToCart = async (req, res) => {
@@ -92,8 +93,29 @@ const deleteFromCart = async (req, res) => {
   });
 };
 
+// DELETE ALL ITEMS IN CART
+const deleteAll = async (req, res) => {
+  const {
+    user: { userId },
+  } = req;
+
+  if (!userId) {
+    throw new UnauthenticatedError(
+      "Not authorized to access this page, please login"
+    );
+  }
+  const allCarts = await CartCollection.deleteMany({
+    createdBy: userId,
+  });
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: "All items removed from cart",
+  });
+};
+
 module.exports = {
   addToCart,
   getCartItems,
   deleteFromCart,
+  deleteAll,
 };
