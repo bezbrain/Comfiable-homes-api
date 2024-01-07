@@ -2,6 +2,7 @@ const CartCollection = require("../models/Cart");
 const ProductCollection = require("../models/Product");
 const { StatusCodes } = require("http-status-codes");
 const NotFoundError = require("../errors/not-found");
+const ConflictError = require("../errors/conflict");
 
 // ADD TO CART
 const addToCart = async (req, res) => {
@@ -15,6 +16,7 @@ const addToCart = async (req, res) => {
   const checkId = await ProductCollection.findOne({
     _id: productId,
   });
+  console.log(checkId);
   // // Check if id is available in any product
   if (!checkId) {
     throw new NotFoundError(`Product with the id ${productId} not found`);
@@ -26,10 +28,7 @@ const addToCart = async (req, res) => {
   });
   // Check if cart is already present in cart
   if (searchCart) {
-    return res.status(StatusCodes.CONFLICT).json({
-      success: true,
-      message: "Item already in cart",
-    });
+    throw new ConflictError("Item already in cart");
   }
 
   const addToCart = await CartCollection.create(req.body);
