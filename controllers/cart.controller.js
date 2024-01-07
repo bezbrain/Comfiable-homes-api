@@ -38,12 +38,12 @@ const addToCart = async (req, res) => {
     throw new ConflictError("Item already in cart");
   }
 
-  const addToCart = await CartCollection.create(updatedProduct);
+  const toCart = await CartCollection.create(updatedProduct);
 
   res.status(StatusCodes.CREATED).json({
     success: true,
     message: "Item added to cart",
-    addToCart,
+    toCart,
   });
 };
 
@@ -84,7 +84,7 @@ const deleteFromCart = async (req, res) => {
     _id: itemId,
     createdBy: userId,
   });
-  // Check if item in the correct id belongs to the logged in user
+  // Check if item is the correct id and belongs to the logged in user
   if (!cart) {
     throw new NotFoundError(`You don't have the authority to remove this item`);
   }
