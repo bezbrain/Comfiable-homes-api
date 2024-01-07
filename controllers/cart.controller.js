@@ -11,21 +11,23 @@ const addToCart = async (req, res) => {
     body: { productId },
   } = req;
 
-  // req.body.createdBy = userId;
-
   const getPresentProduct = await ProductCollection.findOne({
     _id: productId,
   });
-
-  // console.log(getPresentProduct.createdBy);
-  // // Check if id is available in any product
+  // Check if id is available in any product
   if (!getPresentProduct) {
     throw new NotFoundError(`Product with the id ${productId} not found`);
   }
 
-  // Create a new object with the modified createdBy property
-  const updatedProduct = { ...getPresentProduct.toObject(), createdBy: userId };
-  // console.log(updatedProduct);
+  // Modify existing object to contain createdBy and productId property
+  const updatedProduct = {
+    ...getPresentProduct.toObject(),
+    createdBy: userId,
+    productId: productId,
+  };
+
+  // Remove the _id property so that mongoose with generate a new one itself
+  delete updatedProduct._id;
 
   const searchCart = await CartCollection.findOne({
     productId,

@@ -20,7 +20,7 @@ const ErrorHandlerMiddleware = async (err, req, res, next) => {
   if (err.code === 11000) {
     const errorValue = Object.keys(err.keyValue)[0];
     // console.log(errorValue);
-    customError.message = `${errorValue} needs to the unique. Please try another value`;
+    customError.message = `${errorValue} needs to be unique. Please try another value`;
     customError.statusCode = StatusCodes.BAD_REQUEST;
   }
 

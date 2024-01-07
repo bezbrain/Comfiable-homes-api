@@ -103,6 +103,10 @@ const CartSchema = new Schema(
       ref: "Users",
       required: [true, "Please provide a user"],
     },
+    productId: {
+      type: String,
+      required: [true, "id must be provided"],
+    },
   },
   { timestamps: true }
 );
