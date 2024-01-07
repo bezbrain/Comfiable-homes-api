@@ -11,16 +11,21 @@ const addToCart = async (req, res) => {
     body: { productId },
   } = req;
 
-  req.body.createdBy = userId;
+  // req.body.createdBy = userId;
 
-  const checkId = await ProductCollection.findOne({
+  const getPresentProduct = await ProductCollection.findOne({
     _id: productId,
   });
-  console.log(checkId);
+
+  // console.log(getPresentProduct.createdBy);
   // // Check if id is available in any product
-  if (!checkId) {
+  if (!getPresentProduct) {
     throw new NotFoundError(`Product with the id ${productId} not found`);
   }
+
+  // Create a new object with the modified createdBy property
+  const updatedProduct = { ...getPresentProduct.toObject(), createdBy: userId };
+  // console.log(updatedProduct);
 
   const searchCart = await CartCollection.findOne({
     productId,
@@ -31,7 +36,7 @@ const addToCart = async (req, res) => {
     throw new ConflictError("Item already in cart");
   }
 
-  const addToCart = await CartCollection.create(req.body);
+  const addToCart = await CartCollection.create(updatedProduct);
 
   res.status(StatusCodes.CREATED).json({
     success: true,
