@@ -43,7 +43,7 @@ app.use(xss());
 app.use(express.json());
 
 // Timeout middleware
-app.use(timeout("5s"));
+app.use(timeout("1s"));
 app.use(timeoutMiddleware);
 
 app.get("/", (req, res) => {
