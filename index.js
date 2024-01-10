@@ -27,7 +27,7 @@ const timeoutMiddleware = require("./middleware/timeout");
 const app = express();
 
 // Timeout middleware
-app.use(timeout("1s"));
+app.use(timeout("10s"));
 app.use(timeoutMiddleware);
 
 // app.use(

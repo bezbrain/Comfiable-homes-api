@@ -1,7 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 
 const timeoutMiddleware = async (req, res, next) => {
-  if (!req.timeout) {
+  if (!req.timedout) {
     next();
   } else {
     res.status(StatusCodes.REQUEST_TIMEOUT).json({
