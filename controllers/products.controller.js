@@ -24,6 +24,9 @@ const getAllProducts = async (req, res) => {
   if (brand) {
     queryObject.brand = brand;
   }
+  if (brand === "All") {
+    queryObject = {};
+  }
 
   let result = ProductCollection.find(queryObject);
 
