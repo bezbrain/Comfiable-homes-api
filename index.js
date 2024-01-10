@@ -26,6 +26,10 @@ const timeoutMiddleware = require("./middleware/timeout");
 
 const app = express();
 
+// Timeout middleware
+app.use(timeout("1s"));
+app.use(timeoutMiddleware);
+
 // app.use(
 //   rateLimiter({
 //     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -41,10 +45,6 @@ app.use(xss());
 
 // Use this middleware to make sure that the body is available on req.body
 app.use(express.json());
-
-// Timeout middleware
-app.use(timeout("1s"));
-app.use(timeoutMiddleware);
 
 app.get("/", (req, res) => {
   res.send("<h2>Home page</h2><a href='/comfiable-homes-docs'>Go To Docs</a>");
