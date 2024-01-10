@@ -3,6 +3,8 @@ const connectDB = require("./db/connect");
 require("dotenv").config();
 require("express-async-errors");
 
+const timeout = require("connect-timeout");
+
 // Security
 const helmet = require("helmet");
 const cors = require("cors");
@@ -20,6 +22,7 @@ const authRouter = require("./routes/auth.route");
 const productRouter = require("./routes/products.route");
 const cartRouter = require("./routes/cart.route");
 const authMiddleware = require("./middleware/auth");
+const timeoutMiddleware = require("./middleware/timeout");
 
 const app = express();
 
@@ -38,6 +41,10 @@ app.use(xss());
 
 // Use this middleware to make sure that the body is available on req.body
 app.use(express.json());
+
+// Timeout middleware
+app.use(timeout("5s"));
+app.use(timeoutMiddleware);
 
 app.get("/", (req, res) => {
   res.send("<h2>Home page</h2><a href='/comfiable-homes-docs'>Go To Docs</a>");
