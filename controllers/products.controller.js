@@ -3,7 +3,38 @@ const ProductCollection = require("../models/Product");
 const { StatusCodes } = require("http-status-codes");
 
 const getAllProducts = async (req, res) => {
-  const products = await ProductCollection.find({});
+  const { category, search, sort, brand } = req.query;
+  // console.log(req.query);
+  let queryObject = {};
+
+  // Sort by category
+  if (category) {
+    queryObject.category = category;
+  }
+  if (category === "All") {
+    queryObject = {};
+  }
+
+  // Name search
+  if (search) {
+    queryObject.type = { $regex: search, $options: "i" };
+  }
+
+  // Sort by company/brand
+  if (brand) {
+    queryObject.brand = brand;
+  }
+
+  let result = ProductCollection.find(queryObject);
+
+  // Sort product
+  if (sort) {
+    result = result.sort(sort);
+  } else {
+    result = result.sort("createdAt");
+  }
+
+  const products = await result;
   res.status(StatusCodes.OK).json({
     success: true,
     count: products.length,
