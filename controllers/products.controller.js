@@ -7,26 +7,26 @@ const getAllProducts = async (req, res) => {
   // console.log(req.query);
   let queryObject = {};
 
-  // Sort by category
-  if (category) {
+  // Filter by category
+  if (category && category !== "All") {
     queryObject.category = category;
   }
-  if (category === "All") {
-    queryObject = {};
-  }
+  // if (category === "All") {
+  //   queryObject = {};
+  // }
 
-  // Name search
+  // Filter by namme/type
   if (search) {
     queryObject.type = { $regex: search, $options: "i" };
   }
 
-  // Sort by company/brand
-  if (brand) {
+  // Filter by company/brand
+  if (brand && brand !== "All") {
     queryObject.brand = brand;
   }
-  if (brand === "All") {
-    queryObject = {};
-  }
+  // if (brand === "All") {
+  //   queryObject = {};
+  // }
 
   let result = ProductCollection.find(queryObject);
 
