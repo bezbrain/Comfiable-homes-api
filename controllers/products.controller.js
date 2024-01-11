@@ -11,9 +11,6 @@ const getAllProducts = async (req, res) => {
   if (category && category !== "All") {
     queryObject.category = category;
   }
-  // if (category === "All") {
-  //   queryObject = {};
-  // }
 
   // Filter by namme/type
   if (search) {
@@ -24,9 +21,6 @@ const getAllProducts = async (req, res) => {
   if (brand && brand !== "All") {
     queryObject.brand = brand;
   }
-  // if (brand === "All") {
-  //   queryObject = {};
-  // }
 
   let result = ProductCollection.find(queryObject);
 
