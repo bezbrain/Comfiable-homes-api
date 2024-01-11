@@ -3,7 +3,7 @@ const ProductCollection = require("../models/Product");
 const { StatusCodes } = require("http-status-codes");
 
 const getAllProducts = async (req, res) => {
-  const { category, search, sort, brand } = req.query;
+  const { category, search, sort, brand, maxPrice } = req.query;
   // console.log(req.query);
   let queryObject = {};
 
@@ -20,6 +20,11 @@ const getAllProducts = async (req, res) => {
   // Filter by company/brand
   if (brand && brand !== "All") {
     queryObject.brand = brand;
+  }
+
+  // Filter by price range
+  if (maxPrice) {
+    queryObject.price.$lte = parseFloat(maxPrice);
   }
 
   let result = ProductCollection.find(queryObject);
