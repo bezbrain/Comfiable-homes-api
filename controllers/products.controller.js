@@ -24,6 +24,9 @@ const getAllProducts = async (req, res) => {
 
   // Filter by price range
   if (maxPrice) {
+    // console.log(queryObject);
+    queryObject.price = {};
+    // console.log(queryObject);
     queryObject.price.$lte = parseFloat(maxPrice);
   }
 
