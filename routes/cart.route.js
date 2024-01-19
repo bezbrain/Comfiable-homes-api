@@ -15,7 +15,7 @@ router.get("/getCartItems", getCartItems);
 router.delete("/deleteCart/:itemId", deleteFromCart);
 router.delete("/deleteAll", deleteAll);
 
-// Increasers
+// Increaser and Decreaser
 router.get("/increaseItem/:itemId", cartIncrease);
 router.get("/decreaseItem/:itemId", cartDecrease);
 
