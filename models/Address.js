@@ -1,4 +1,4 @@
-const { model, Schema } = require("mongoose");
+const { model, Schema, Types } = require("mongoose");
 
 const AddressSchema = new Schema(
   {
@@ -10,7 +10,7 @@ const AddressSchema = new Schema(
       type: String,
       required: [true, "Last Name cannot be empty"],
     },
-    Address: {
+    address: {
       type: String,
       required: [true, "Address cannot be empty"],
     },
@@ -29,6 +29,11 @@ const AddressSchema = new Schema(
     email: {
       type: String,
       required: [true, "Email Address cannot be empty"],
+    },
+    createdBy: {
+      type: Types.ObjectId,
+      ref: "Users",
+      required: [true, "Please, provide a user"],
     },
   },
   { timestamps: true }
