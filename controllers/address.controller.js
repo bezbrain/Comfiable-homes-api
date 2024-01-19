@@ -1,6 +1,7 @@
 const AddressCollection = require("../models/Address");
 const { StatusCodes } = require("http-status-codes");
 const BadRequestError = require("../errors/bad-request");
+const NotFoundError = require("../errors/not-found");
 
 // CREATE AN ADDRESS
 const createAddress = async (req, res) => {
@@ -43,7 +44,49 @@ const getAddress = async (req, res) => {
   });
 };
 
+const updateAddress = async (req, res) => {
+  const {
+    body,
+    user: { userId },
+  } = req;
+
+  const { firstName, lastName, address, city, zipCode, mobileNumber, email } =
+    body;
+
+  // Check if all fields are filled
+  if (
+    !firstName ||
+    !lastName ||
+    !address ||
+    !city ||
+    !zipCode ||
+    !mobileNumber ||
+    !email
+  ) {
+    throw new BadRequestError("No field should be left empty");
+  }
+
+  const findAddress = await AddressCollection.findOneAndUpdate(
+    {
+      createdBy: userId,
+    },
+    req.body,
+    { new: true, runValidators: true }
+  );
+
+  //   Check if address with the right user Id exist
+  if (!findAddress) {
+    throw new NotFoundError("User with an address not found");
+  }
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: "Updated successfully",
+  });
+};
+
 module.exports = {
   createAddress,
   getAddress,
+  updateAddress,
 };
