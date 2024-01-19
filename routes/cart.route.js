@@ -7,6 +7,7 @@ const {
   deleteFromCart,
   deleteAll,
   cartIncrease,
+  cartDecrease,
 } = require("../controllers/cart.controller");
 
 router.post("/addToCart", addToCart);
@@ -16,5 +17,6 @@ router.delete("/deleteAll", deleteAll);
 
 // Increasers
 router.get("/increaseItem/:itemId", cartIncrease);
+router.get("/decreaseItem/:itemId", cartDecrease);
 
 module.exports = router;
