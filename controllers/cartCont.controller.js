@@ -24,7 +24,7 @@ const cartIncrease = async (req, res) => {
   if (item.counter === 5) {
     const updateCounter = await CartCollection.findOneAndUpdate(
       { _id: itemId, createdBy: userId },
-      { ...req.body, counter: 5, isBlur: true },
+      { ...req.body, counter: 5, isIncreaseBlur: true, isDecreaseBlur: false },
       { new: true, runValidations: true }
     );
     if (!updateCounter) {
@@ -40,7 +40,12 @@ const cartIncrease = async (req, res) => {
   // Update the counter with the updated counter checking if counter hasn't reached limit
   const updateCounter = await CartCollection.findOneAndUpdate(
     { _id: itemId, createdBy: userId },
-    { ...req.body, counter: increaseCounter, isBlur: false },
+    {
+      ...req.body,
+      counter: increaseCounter,
+      isIncreaseBlur: false,
+      isDecreaseBlur: false,
+    },
     { new: true, runValidations: true }
   );
 
@@ -74,7 +79,7 @@ const cartDecrease = async (req, res) => {
   if (item.counter === 1) {
     const updateCounter = await CartCollection.findOneAndUpdate(
       { _id: itemId, createdBy: userId },
-      { ...req.body, counter: 1, isBlur: true },
+      { ...req.body, counter: 1, isDecreaseBlur: true, isIncreaseBlur: false },
       { new: true, runValidations: true }
     );
     if (!updateCounter) {
@@ -90,7 +95,12 @@ const cartDecrease = async (req, res) => {
   // Update the counter with the updated counter
   const updateCounter = await CartCollection.findOneAndUpdate(
     { _id: itemId, createdBy: userId },
-    { ...req.body, counter: decreaseCounter, isBlur: false },
+    {
+      ...req.body,
+      counter: decreaseCounter,
+      isDecreaseBlur: false,
+      isIncreaseBlur: false,
+    },
     { new: true, runValidations: true }
   );
 

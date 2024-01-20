@@ -107,7 +107,11 @@ const CartSchema = new Schema(
       type: String,
       required: [true, "id must be provided"],
     },
-    isBlur: {
+    isIncreaseBlur: {
+      type: Boolean,
+      default: false,
+    },
+    isDecreaseBlur: {
       type: Boolean,
       default: false,
     },
