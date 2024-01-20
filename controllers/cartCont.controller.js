@@ -40,7 +40,7 @@ const cartIncrease = async (req, res) => {
   // Update the counter with the updated counter checking if counter hasn't reached limit
   const updateCounter = await CartCollection.findOneAndUpdate(
     { _id: itemId, createdBy: userId },
-    { ...req.body, counter: increaseCounter },
+    { ...req.body, counter: increaseCounter, isBlur: false },
     { new: true, runValidations: true }
   );
 
@@ -74,7 +74,7 @@ const cartDecrease = async (req, res) => {
   if (item.counter === 1) {
     const updateCounter = await CartCollection.findOneAndUpdate(
       { _id: itemId, createdBy: userId },
-      { ...req.body, counter: 1, isBlur: false },
+      { ...req.body, counter: 1, isBlur: true },
       { new: true, runValidations: true }
     );
     if (!updateCounter) {
