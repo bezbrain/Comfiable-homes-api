@@ -107,6 +107,10 @@ const CartSchema = new Schema(
       type: String,
       required: [true, "id must be provided"],
     },
+    isBlur: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
