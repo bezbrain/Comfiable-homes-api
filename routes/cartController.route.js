@@ -4,7 +4,7 @@ const router = express.Router();
 const {
   cartIncrease,
   cartDecrease,
-} = require("../controllers/cart.controller");
+} = require("../controllers/cartCont.controller");
 
 router.get("/increaseItem/:itemId", cartIncrease);
 router.get("/decreaseItem/:itemId", cartDecrease);

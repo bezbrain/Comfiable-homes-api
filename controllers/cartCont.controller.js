@@ -20,7 +20,7 @@ const cartIncrease = async (req, res) => {
 
   const increaseCounter = item.counter + 1;
 
-  // Update the counter with the updated counter
+  // Update the counter with the updated counter checking if counter has reached limit
   if (item.counter === 5) {
     const updateCounter = await CartCollection.findOneAndUpdate(
       { _id: itemId, createdBy: userId },
@@ -37,6 +37,7 @@ const cartIncrease = async (req, res) => {
     });
   }
 
+  // Update the counter with the updated counter checking if counter hasn't reached limit
   const updateCounter = await CartCollection.findOneAndUpdate(
     { _id: itemId, createdBy: userId },
     { ...req.body, counter: increaseCounter },
@@ -69,10 +70,27 @@ const cartDecrease = async (req, res) => {
 
   const decreaseCounter = item.counter - 1;
 
+  // Update the counter with the updated counter checking if counter has reached limit
+  if (item.counter === 1) {
+    const updateCounter = await CartCollection.findOneAndUpdate(
+      { _id: itemId, createdBy: userId },
+      { ...req.body, counter: 1, isBlur: false },
+      { new: true, runValidations: true }
+    );
+    if (!updateCounter) {
+      throw new NotFoundError(`Item with the id ${itemId} not found`);
+    }
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Counter cannot be less than one",
+      updateCounter,
+    });
+  }
+
   // Update the counter with the updated counter
   const updateCounter = await CartCollection.findOneAndUpdate(
     { _id: itemId, createdBy: userId },
-    { ...req.body, counter: decreaseCounter },
+    { ...req.body, counter: decreaseCounter, isBlur: false },
     { new: true, runValidations: true }
   );
 
@@ -85,4 +103,9 @@ const cartDecrease = async (req, res) => {
     message: "Counter decrease",
     updateCounter,
   });
+};
+
+module.exports = {
+  cartIncrease,
+  cartDecrease,
 };
