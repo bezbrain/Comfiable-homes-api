@@ -130,6 +130,22 @@ const cartIncrease = async (req, res) => {
   const increaseCounter = item.counter + 1;
 
   // Update the counter with the updated counter
+  if (item.counter === 5) {
+    const updateCounter = await CartCollection.findOneAndUpdate(
+      { _id: itemId, createdBy: userId },
+      { ...req.body, counter: 5, isBlur: true },
+      { new: true, runValidations: true }
+    );
+    if (!updateCounter) {
+      throw new NotFoundError(`Item with the id ${itemId} not found`);
+    }
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Counter reached limit",
+      updateCounter,
+    });
+  }
+
   const updateCounter = await CartCollection.findOneAndUpdate(
     { _id: itemId, createdBy: userId },
     { ...req.body, counter: increaseCounter },

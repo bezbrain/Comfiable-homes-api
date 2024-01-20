@@ -21,6 +21,7 @@ const ErrorHandlerMiddleware = require("./middleware/error-handler");
 const authRouter = require("./routes/auth.route");
 const productRouter = require("./routes/products.route");
 const cartRouter = require("./routes/cart.route");
+const cartControllerRouter = require("./routes/cartController.route");
 const addressRouter = require("./routes/address.route");
 const authMiddleware = require("./middleware/auth");
 const timeoutMiddleware = require("./middleware/timeout");
@@ -57,6 +58,7 @@ app.use("/comfiable-homes-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1", productRouter);
 app.use("/api/v1", authMiddleware, cartRouter);
+app.use("/api/v1", authMiddleware, cartControllerRouter);
 app.use("/api/v1/checkout", authMiddleware, addressRouter);
 
 app.use(NotFoundMiddleware);
