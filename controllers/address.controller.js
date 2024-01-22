@@ -14,7 +14,7 @@ const createAddress = async (req, res) => {
   //   Check if address already existed
   const findAddress = await AddressCollection.findOne({ createdBy: userId });
   if (findAddress) {
-    throw new BadRequestError("Address Already exist. Pleeas update instead");
+    throw new BadRequestError("Address Already exist. Please update instead");
   }
 
   const address = await AddressCollection.create(body);
