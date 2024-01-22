@@ -18,9 +18,17 @@ const AddressSchema = new Schema(
       type: String,
       required: [true, "City/Town cannot be empty"],
     },
+    state: {
+      type: String,
+      required: [true, "State cannot be empty"],
+    },
     zipCode: {
       type: String,
       required: [true, "Zip Code cannot be empty"],
+    },
+    country: {
+      type: String,
+      required: [true, "Country cannot be empty"],
     },
     mobileNumber: {
       type: Number,

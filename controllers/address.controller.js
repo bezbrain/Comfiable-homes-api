@@ -57,18 +57,28 @@ const updateAddress = async (req, res) => {
     user: { userId },
   } = req;
 
-  const { firstName, lastName, address, city, zipCode, mobileNumber, email } =
-    body;
+  const {
+    firstName,
+    lastName,
+    address,
+    city,
+    zipCode,
+    mobileNumber,
+    email,
+    state,
+    country,
+  } = body;
 
   // Check if all fields are filled
   if (
-    !firstName ||
-    !lastName ||
-    !address ||
-    !city ||
-    !zipCode ||
-    !mobileNumber ||
-    !email
+    (!firstName ||
+      !lastName ||
+      !address ||
+      !city ||
+      !zipCode ||
+      !mobileNumber ||
+      !email,
+    !state || !country)
   ) {
     throw new BadRequestError("No field should be left empty");
   }
