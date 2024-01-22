@@ -40,6 +40,7 @@ const getAddress = async (req, res) => {
     // throw new BadRequestError("Address Information cannot be found");
     return res.status(StatusCodes.OK).json({
       success: false,
+      message: "Address Information cannot be found",
     });
   }
 
