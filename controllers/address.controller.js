@@ -37,7 +37,10 @@ const getAddress = async (req, res) => {
   const address = await AddressCollection.findOne({ createdBy: userId });
   //   Check if address for a user is available
   if (!address) {
-    throw new BadRequestError("Address Information cannot be found");
+    // throw new BadRequestError("Address Information cannot be found");
+    return res.status(StatusCodes.OK).json({
+      success: false,
+    });
   }
 
   res.status(StatusCodes.OK).json({
