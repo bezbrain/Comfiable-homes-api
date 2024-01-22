@@ -30,6 +30,10 @@ const AddressSchema = new Schema(
       type: String,
       required: [true, "Email Address cannot be empty"],
     },
+    isAddress: {
+      type: Boolean,
+      default: false,
+    },
     createdBy: {
       type: Types.ObjectId,
       ref: "Users",

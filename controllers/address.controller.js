@@ -17,7 +17,10 @@ const createAddress = async (req, res) => {
     throw new BadRequestError("Address Already exist. Please update instead");
   }
 
-  const address = await AddressCollection.create(body);
+  const address = await AddressCollection.create({
+    ...body,
+    isAddress: true,
+  });
   res.status(StatusCodes.CREATED).json({
     success: true,
     address,
