@@ -112,7 +112,7 @@ const checkForAddress = async (req, res) => {
   const address = await AddressCollection.findOne({ createdBy: userId });
 
   // console.log(address);
-  res.status(StatusCodes.NOT_FOUND).json({
+  res.status(StatusCodes.OK).json({
     success: true,
     message: address,
   });
