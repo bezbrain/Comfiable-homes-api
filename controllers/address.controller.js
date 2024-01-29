@@ -103,24 +103,24 @@ const updateAddress = async (req, res) => {
   });
 };
 
-// FUNCTION TO CHECK IF ADDRESS IS IN DB OR NOT
-const checkForAddress = async (req, res) => {
-  const {
-    user: { userId },
-  } = req;
+// // FUNCTION TO CHECK IF ADDRESS IS IN DB OR NOT
+// const checkForAddress = async (req, res) => {
+//   const {
+//     user: { userId },
+//   } = req;
 
-  const address = await AddressCollection.findOne({ createdBy: userId });
+//   const address = await AddressCollection.findOne({ createdBy: userId });
 
-  // console.log(address);
-  res.status(StatusCodes.OK).json({
-    success: true,
-    message: address,
-  });
-};
+//   // console.log(address);
+//   res.status(StatusCodes.OK).json({
+//     success: true,
+//     message: address,
+//   });
+// };
 
 module.exports = {
   createAddress,
   getAddress,
   updateAddress,
-  checkForAddress,
+  // checkForAddress,
 };
