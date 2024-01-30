@@ -48,9 +48,9 @@ const acceptPayment = async (req, res) => {
 
     apiRes.on("end", () => {
       //   console.log(JSON.parse(data));
+      const responseData = JSON.parse(data);
       return res.status(StatusCodes.OK).json({
-        success: true,
-        data,
+        data: responseData,
       });
     });
   });
