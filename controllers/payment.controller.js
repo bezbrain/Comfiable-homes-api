@@ -20,6 +20,8 @@ const acceptPayment = async (req, res) => {
     throw new BadRequestError("Email and amount cannot be empty");
   }
 
+  // Check if amount is number and also check if aggregation coming from checkout is same as the one in the amount input field
+
   //   Params
   const params = JSON.stringify({
     email: email,
@@ -50,7 +52,7 @@ const acceptPayment = async (req, res) => {
       //   console.log(JSON.parse(data));
       const responseData = JSON.parse(data);
       return res.status(StatusCodes.OK).json({
-        data: responseData,
+        responseData,
       });
     });
   });
