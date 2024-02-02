@@ -72,6 +72,11 @@ const acceptPayment = async (req, res) => {
   clientReq.end(params);
 };
 
+// HANDLE PAYSTACK CALLBACK
+// export const paymentCallback = async (req, res) => {
+//   //
+// };
+
 module.exports = {
   acceptPayment,
 };

@@ -23,6 +23,8 @@ const login = async (req, res) => {
     body: { email, password },
   } = req;
 
+  console.log(req.user);
+
   if (!email || !password) {
     throw new BadRequestError("Email or Password cannot be empty");
   }
