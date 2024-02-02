@@ -41,12 +41,12 @@ const login = async (req, res) => {
     throw new UnauthenticatedError("Password does not match");
   }
 
-  const token = user.createJWT();
+  const mytoken = user.createJWT();
 
   res.status(StatusCodes.CREATED).json({
     success: true,
     message: "User login successful",
-    token,
+    mytoken,
     user: req.user,
   });
 };
