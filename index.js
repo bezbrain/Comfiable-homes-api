@@ -67,7 +67,7 @@ app.use(NotFoundMiddleware);
 app.use(ErrorHandlerMiddleware);
 
 // The dynamic port
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3007;
 
 // Connect to DB
 const startDB = async () => {

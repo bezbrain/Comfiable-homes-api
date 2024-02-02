@@ -23,8 +23,6 @@ const login = async (req, res) => {
     body: { email, password },
   } = req;
 
-  console.log(req.user);
-
   if (!email || !password) {
     throw new BadRequestError("Email or Password cannot be empty");
   }
@@ -41,13 +39,13 @@ const login = async (req, res) => {
     throw new UnauthenticatedError("Password does not match");
   }
 
-  const mytoken = user.createJWT();
+  const token = user.createJWT();
 
   res.status(StatusCodes.CREATED).json({
     success: true,
     message: "User login successful",
-    mytoken,
-    user: req.user,
+    token,
+    user: user.username,
   });
 };
 
