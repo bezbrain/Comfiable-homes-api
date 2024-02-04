@@ -74,7 +74,6 @@ const paymentCallback = async (req, res) => {
   const isValidSignature = verifyPaystackSignature(paystackSignature, event);
   if (!isValidSignature) {
     console.error(`Invalid Paystack signature`);
-    // return res.status(StatusCodes.BAD_REQUEST).send('Invalid signature')
     throw new BadRequestError("Invalid signature");
   }
 
