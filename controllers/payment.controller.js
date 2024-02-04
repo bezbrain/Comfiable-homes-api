@@ -4,6 +4,7 @@ const https = require("https");
 const BadRequestError = require("../errors/bad-request");
 const { StatusCodes } = require("http-status-codes");
 const config = require("../config/config");
+const crypto = require("crypto");
 
 const acceptPayment = async (req, res) => {
   const {
@@ -68,12 +69,19 @@ const acceptPayment = async (req, res) => {
 
 // HANDLE PAYSTACK CALLBACK
 const paymentWebhook = async (req, res) => {
+  // Validate event
+  const hash = crypto
+    .createHmac("sha512", config.paystackSecret)
+    .update(JSON.stringify(req.body))
+    .digest("hex");
+
   // Verify the Paystack signature (for security)
   const paystackSignature = req.headers["x-paystack-signature"];
+
   const event = req.body;
-  console.log(event, paystackSignature);
-  const isValidSignature = verifyPaystackSignature(paystackSignature, event);
-  if (!isValidSignature) {
+  // console.log(event, paystackSignature);
+  // const isValidSignature = verifyPaystackSignature(paystackSignature, event);
+  if (hash != paystackSignature) {
     console.error(`Invalid Paystack signature`);
     throw new BadRequestError("Invalid signature");
   }
