@@ -71,7 +71,7 @@ const acceptPayment = async (req, res) => {
 const paymentWebhook = async (req, res) => {
   // Validate event
   const hash = crypto
-    .createHmac("sha512", secret)
+    .createHmac("sha512", config.paystackSecret)
     .update(JSON.stringify(req.body))
     .digest("hex");
 
