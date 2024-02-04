@@ -79,6 +79,7 @@ const paymentCallback = async (req, res) => {
   }
 
   // Process the event data (e.g., check if payment was successful)
+  return res.redirect("http://localhost:5173/orders/open");
   if (event.event === "charge.success") {
     const { reference, amount, customer } = event.data;
 
@@ -88,7 +89,6 @@ const paymentCallback = async (req, res) => {
 
     // Redirect the user to the order confirmation page
     console.log("Payment successful");
-    return res.redirect("http://localhost:5173/orders/open");
   } else {
     // Handle other events (e.g., charge.failed, etc.)
     // You might want to log these events for debugging
