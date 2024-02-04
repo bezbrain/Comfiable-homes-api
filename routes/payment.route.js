@@ -3,10 +3,10 @@ const router = express.Router();
 
 const {
   acceptPayment,
-  paymentCallback,
+  paymentWebhook,
 } = require("../controllers/payment.controller");
 
 router.post("/acceptPayment", acceptPayment);
-router.post("/paystack/callback", paymentCallback);
+router.post("/paystack/webhook", paymentWebhook);
 
 module.exports = router;

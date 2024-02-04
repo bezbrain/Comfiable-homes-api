@@ -67,17 +67,16 @@ const acceptPayment = async (req, res) => {
 };
 
 // HANDLE PAYSTACK CALLBACK
-const paymentCallback = async (req, res) => {
+const paymentWebhook = async (req, res) => {
   // Verify the Paystack signature (for security)
   const paystackSignature = req.headers["x-paystack-signature"];
   const event = req.body;
+  console.log(event, paystackSignature);
   const isValidSignature = verifyPaystackSignature(paystackSignature, event);
   if (!isValidSignature) {
     console.error(`Invalid Paystack signature`);
     throw new BadRequestError("Invalid signature");
   }
-
-  console.log(event);
 
   // Process the event data (e.g check if payment was successful)
   if (event.event === "charge.success") {
@@ -88,7 +87,7 @@ const paymentCallback = async (req, res) => {
 
     // Redirect the user to the order confirmation page
     console.log("I am success");
-    res.redirect("/order/open");
+    res.redirect("http://localhost:5173/orders/open");
   } else {
     // Handle other events (e.g., charge.failed, etc.)
     // You might want to log these events for debugging
@@ -110,5 +109,5 @@ function verifyPaystackSignature(signature, event) {
 
 module.exports = {
   acceptPayment,
-  paymentCallback,
+  paymentWebhook,
 };
