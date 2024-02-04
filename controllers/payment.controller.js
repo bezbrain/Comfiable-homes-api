@@ -5,12 +5,6 @@ const BadRequestError = require("../errors/bad-request");
 const { StatusCodes } = require("http-status-codes");
 const config = require("../config/config");
 
-// const payStack = {
-//     acceptPayment: async(req, res)=> {
-
-//     }
-// }
-
 const acceptPayment = async (req, res) => {
   const {
     body: { email, amount },
@@ -73,7 +67,7 @@ const acceptPayment = async (req, res) => {
 };
 
 // HANDLE PAYSTACK CALLBACK
-export const paymentCallback = async (req, res) => {
+const paymentCallback = async (req, res) => {
   // Verify the Paystack signature (for security)
   const paystackSignature = req.headers["x-paystack-signature"];
   const event = req.body;
@@ -92,7 +86,7 @@ export const paymentCallback = async (req, res) => {
     // You can also send a confirmation email to the customer
 
     // Redirect the user to the order confirmation page
-    res.redirect("/order-confirmation");
+    res.redirect("/order/open");
   } else {
     // Handle other events (e.g., charge.failed, etc.)
     // You might want to log these events for debugging
