@@ -71,12 +71,14 @@ const paymentCallback = async (req, res) => {
   // Verify the Paystack signature (for security)
   const paystackSignature = req.headers["x-paystack-signature"];
   const event = req.body;
-  const isValidSignature = verifyPaystackSignature(paystackSignature, body);
+  const isValidSignature = verifyPaystackSignature(paystackSignature, event);
   if (!isValidSignature) {
     console.error(`Invalid Paystack signature`);
     // return res.status(StatusCodes.BAD_REQUEST).send('Invalid signature')
     throw new BadRequestError("Invalid signature");
   }
+
+  console.log(event);
 
   // Process the event data (e.g check if payment was successful)
   if (event.event === "charge.success") {
@@ -86,6 +88,7 @@ const paymentCallback = async (req, res) => {
     // You can also send a confirmation email to the customer
 
     // Redirect the user to the order confirmation page
+    console.log("I am success");
     res.redirect("/order/open");
   } else {
     // Handle other events (e.g., charge.failed, etc.)
