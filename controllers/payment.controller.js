@@ -67,36 +67,6 @@ const acceptPayment = async (req, res) => {
   clientReq.end(params);
 };
 
-const paymentCallback = async (req, res) => {
-  // Verify the Paystack signature (for security)
-  const paystackSignature = req.headers["x-paystack-signature"];
-  const event = req.body;
-  const isValidSignature = verifyPaystackSignature(paystackSignature, event);
-
-  if (!isValidSignature) {
-    console.error(`Invalid Paystack signature`);
-    throw new BadRequestError("Invalid signature");
-  }
-
-  // Process the event data (e.g., check if payment was successful)
-  return res.redirect("http://localhost:5173/orders/open");
-  if (event.event === "charge.success") {
-    const { reference, amount, customer } = event.data;
-
-    // Update your database with successful payment details
-    // For example, mark the donation as paid
-    // You can also send a confirmation email to the customer
-
-    // Redirect the user to the order confirmation page
-    console.log("Payment successful");
-  } else {
-    // Handle other events (e.g., charge.failed, etc.)
-    // You might want to log these events for debugging
-    console.log(`Received Paystack event: ${event.event}`);
-    res.status(200).send("Event received");
-  }
-};
-
 // HANDLE PAYSTACK CALLBACK
 const paymentWebhook = async (req, res) => {
   // Validate event
@@ -131,7 +101,7 @@ const paymentWebhook = async (req, res) => {
   //   // Handle other events (e.g., charge.failed, etc.)
   //   // You might want to log these events for debugging
   //   console.log(`Received Paystack event: ${event.event}`);
-  res.status(200).send("Event received");
+  res.status(200);
   // }
 };
 
@@ -149,5 +119,5 @@ function verifyPaystackSignature(signature, event) {
 module.exports = {
   acceptPayment,
   paymentWebhook,
-  paymentCallback,
+  // paymentCallback,
 };
