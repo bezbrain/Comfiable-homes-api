@@ -7,6 +7,13 @@ export interface IUser {
   email: string;
   password: string;
   isAdmin: boolean;
+  isVerified: boolean;
+  emailVerificationOtp?: string;
+  emailVerificationOtpExpires?: Date;
+  emailVerificationAttempts: number;
+  passwordResetOtp?: string;
+  passwordResetOtpExpires?: Date;
+  passwordResetAttempts: number;
 }
 
 export interface IUserMethods {
@@ -48,9 +55,30 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
     type: Boolean,
     default: false,
   },
+
+  isVerified: {
+    type: Boolean,
+    default: true,
+  },
+
+  emailVerificationOtp: String,
+  emailVerificationOtpExpires: Date,
+  emailVerificationAttempts: {
+    type: Number,
+    default: 0,
+  },
+  passwordResetOtp: String,
+  passwordResetOtpExpires: Date,
+  passwordResetAttempts: {
+    type: Number,
+    default: 0,
+  },
 });
 
 UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();

@@ -9,5 +9,8 @@ declare namespace NodeJS {
     PAYSTACK_SECRET_KEY?: string;
     PAYSTACK_BASE_URL?: string;
     FRONTEND_URL?: string;
+    EMAIL_USER?: string;
+    EMAIL_PASS?: string;
+    EMAIL_FROM?: string;
   }
 }

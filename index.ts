@@ -26,6 +26,7 @@ import newsletterRouter from "./routes/newsletter.route";
 import statsRouter from "./routes/stats.route";
 import authMiddleware from "./middleware/auth";
 import timeoutMiddleware from "./middleware/timeout";
+import config from "./config/config";
 
 dotenv.config();
 
@@ -80,9 +81,16 @@ const startDB = async () => {
       throw new Error("MONGO_URI is not set");
     }
     await connectDB(process.env.MONGO_URI as string);
-    const server = app.listen(port, () =>
-      console.log(`Server is listening on port ${port}`),
-    );
+    const server = app.listen(port, () => {
+      console.log(`Server is listening on port ${port}`);
+      if (config.emailUser && config.emailPass) {
+        console.log(`Email is configured for ${config.emailUser}`);
+      } else {
+        console.warn(
+          "Email is not configured. Set EMAIL_USER and EMAIL_PASS, then restart. OTPs will only print in the terminal."
+        );
+      }
+    });
 
     const shutdown = async () => {
       server.close();

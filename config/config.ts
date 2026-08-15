@@ -1,6 +1,10 @@
+import path from "path";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ path: path.join(process.cwd(), ".env") });
+
+const emailUser = process.env.EMAIL_USER?.trim();
+const emailPass = process.env.EMAIL_PASS?.replace(/\s/g, "");
 
 const config = {
   paystackSecret: process.env.PAYSTACK_SECRET_KEY,
@@ -10,6 +14,9 @@ const config = {
   frontendUrl: process.env.FRONTEND_URL || "http://localhost:5173",
   // Keep this in sync with the checkout shipping fee on the frontend.
   shippingFee: 8010,
+  emailUser,
+  emailPass,
+  emailFrom: process.env.EMAIL_FROM?.trim() || emailUser,
 };
 
 export default config;

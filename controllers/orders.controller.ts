@@ -5,6 +5,7 @@ import UserCollection from "../models/Users";
 import BadRequestError from "../errors/bad-request";
 import ForbiddenError from "../errors/forbidden";
 import NotFoundError from "../errors/not-found";
+import { sendOrderCompletedEmail } from "../utils/mailer";
 
 type AuthUser = { userId: string; username: string; isAdmin?: boolean };
 
@@ -113,6 +114,15 @@ const completeOrder = async (req: Request, res: Response) => {
   order.status = "closed";
   order.completedAt = new Date();
   await order.save();
+
+  if (order.email) {
+    void sendOrderCompletedEmail(order.email, {
+      total: order.total,
+      reference: order.reference,
+    }).catch((error) =>
+      console.error("Could not send order-completed email", error)
+    );
+  }
 
   res.status(StatusCodes.OK).json({
     success: true,

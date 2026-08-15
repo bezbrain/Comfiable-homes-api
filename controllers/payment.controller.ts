@@ -8,6 +8,7 @@ import { paystackRequest } from "../utils/paystack";
 import CartCollection from "../models/Cart";
 import OrderCollection from "../models/Order";
 import TransactionCollection from "../models/Transaction";
+import { sendOrderPlacedEmail } from "../utils/mailer";
 
 type AuthedRequest = Request & { user: { userId: string; username: string } };
 
@@ -109,6 +110,14 @@ const fulfillSuccessfulPayment = async (reference: string) => {
   transaction.status = "success";
   transaction.orderId = order._id;
   await transaction.save();
+
+  if (order.email) {
+    void sendOrderPlacedEmail(order.email, {
+      total: order.total,
+      reference: order.reference,
+      items: order.items,
+    }).catch((error) => console.error("Could not send order email", error));
+  }
 
   return order;
 };
