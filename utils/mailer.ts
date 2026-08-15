@@ -70,7 +70,7 @@ const sendViaResend = async ({
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "ComfiableHomes <beth.t@example.com>",
+      from: config.resendFrom,
       to: [to],
       subject,
       html,

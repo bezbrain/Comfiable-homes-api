@@ -18,6 +18,10 @@ const config = {
   emailPass,
   emailFrom: process.env.EMAIL_FROM?.trim() || emailUser,
   resendApiKey: process.env.RESEND_API_KEY?.trim(),
+  resendFrom:
+    process.env.RESEND_FROM?.trim() ||
+    process.env.EMAIL_FROM?.trim() ||
+    "ComfiableHomes <hello@dezxi.com>",
 };
 
 export default config;
