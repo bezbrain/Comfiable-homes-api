@@ -20,6 +20,8 @@ import cartRouter from "./routes/cart.route";
 import cartControllerRouter from "./routes/cartController.route";
 import addressRouter from "./routes/address.route";
 import paymentRouter from "./routes/payment.route";
+import newsletterRouter from "./routes/newsletter.route";
+import statsRouter from "./routes/stats.route";
 import authMiddleware from "./middleware/auth";
 import timeoutMiddleware from "./middleware/timeout";
 
@@ -55,6 +57,8 @@ app.use("/comfiable-homes-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1", productRouter);
+app.use("/api/v1", newsletterRouter);
+app.use("/api/v1", authMiddleware, statsRouter);
 app.use("/api/v1", authMiddleware, cartRouter);
 app.use("/api/v1", authMiddleware, cartControllerRouter);
 app.use("/api/v1/checkout", authMiddleware, addressRouter);

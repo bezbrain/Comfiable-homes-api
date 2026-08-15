@@ -5,7 +5,12 @@ import ProductCollection, { IProduct } from "../models/Product";
 import { StatusCodes } from "http-status-codes";
 
 const getAllProducts = async (req: Request, res: Response) => {
-  const { category, search, sort, brand, maxPrice } = req.query;
+  const { category, search, sort, brand, maxPrice, featured } = req.query;
+
+  if (featured === "true") {
+    return getFeaturedProducts(req, res);
+  }
+
   const queryObject: FilterQuery<IProduct> = {};
 
   if (category && category !== "All") {
@@ -33,10 +38,25 @@ const getAllProducts = async (req: Request, res: Response) => {
     result = result.sort("createdAt");
   }
 
-  const products = await result;
+  const page = Math.max(1, parseInt(String(req.query.page || "1"), 10) || 1);
+  const limit = Math.min(
+    48,
+    Math.max(1, parseInt(String(req.query.limit || "9"), 10) || 9)
+  );
+  const skip = (page - 1) * limit;
+  const total = await ProductCollection.countDocuments(queryObject);
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+  const products = await result.skip(skip).limit(limit);
+
   res.status(StatusCodes.OK).json({
     success: true,
     count: products.length,
+    total,
+    page,
+    limit,
+    totalPages,
+    hasNextPage: page < totalPages,
+    hasPrevPage: page > 1,
     message: "All products",
     products,
   });
@@ -59,4 +79,17 @@ const singleProduct = async (req: Request, res: Response) => {
   });
 };
 
-export { getAllProducts, singleProduct };
+const getFeaturedProducts = async (_req: Request, res: Response) => {
+  const products = await ProductCollection.aggregate([
+    { $sample: { size: 3 } },
+  ]);
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    count: products.length,
+    message: "Featured products",
+    products,
+  });
+};
+
+export { getAllProducts, singleProduct, getFeaturedProducts };

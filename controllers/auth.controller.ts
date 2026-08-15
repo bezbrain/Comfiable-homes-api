@@ -14,6 +14,7 @@ const register = async (req: Request, res: Response) => {
     success: true,
     message: "User registration successful",
     token,
+    user: user.username,
   });
 };
 
