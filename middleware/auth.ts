@@ -3,6 +3,7 @@ import { revokedTokens } from "../controllers/auth.controller";
 import UnauthenticatedError from "../errors/unauthenticated";
 import ForbiddenError from "../errors/forbidden";
 import jwt from "jsonwebtoken";
+import UserCollection from "../models/Users";
 
 interface AuthTokenPayload {
   userId: string;
@@ -29,19 +30,34 @@ const authMiddleware = async (
     throw new ForbiddenError("Forbidden: Token has been revoked");
   }
 
+  let payload: AuthTokenPayload;
   try {
-    const payload = jwt.verify(
+    payload = jwt.verify(
       extractToken,
       process.env.JWT_SECRET as string
     ) as AuthTokenPayload;
-    const { userId, username, isAdmin } = payload;
-    req.user = { userId, username, isAdmin };
-    next();
-  } catch (error) {
+  } catch {
     throw new UnauthenticatedError(
       "Not authorized to access this page, please login"
     );
   }
+
+  const user = await UserCollection.findById(payload.userId).select(
+    "username isAdmin"
+  );
+
+  if (!user) {
+    throw new UnauthenticatedError(
+      "This account no longer exists. Please sign in again."
+    );
+  }
+
+  req.user = {
+    userId: user._id.toString(),
+    username: user.username,
+    isAdmin: user.isAdmin,
+  };
+  next();
 };
 
 export default authMiddleware;
