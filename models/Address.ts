@@ -8,8 +8,9 @@ export interface IAddress {
   state: string;
   zipCode: string;
   country: string;
-  mobileNumber: number;
+  mobileNumber: number | string;
   email: string;
+  isPrimary: boolean;
   isAddress: boolean;
   createdBy: Types.ObjectId;
 }
@@ -45,12 +46,16 @@ const AddressSchema = new Schema<IAddress>(
       required: [true, "Country cannot be empty"],
     },
     mobileNumber: {
-      type: Number,
+      type: Schema.Types.Mixed,
       required: [true, "Mobile Number cannot be empty"],
     },
     email: {
       type: String,
       required: [true, "Email Address cannot be empty"],
+    },
+    isPrimary: {
+      type: Boolean,
+      default: false,
     },
     isAddress: {
       type: Boolean,

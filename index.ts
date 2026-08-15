@@ -20,6 +20,7 @@ import cartRouter from "./routes/cart.route";
 import cartControllerRouter from "./routes/cartController.route";
 import addressRouter from "./routes/address.route";
 import paymentRouter from "./routes/payment.route";
+import ordersRouter from "./routes/orders.route";
 import newsletterRouter from "./routes/newsletter.route";
 import statsRouter from "./routes/stats.route";
 import authMiddleware from "./middleware/auth";
@@ -63,6 +64,7 @@ app.use("/api/v1", authMiddleware, cartRouter);
 app.use("/api/v1", authMiddleware, cartControllerRouter);
 app.use("/api/v1/checkout", authMiddleware, addressRouter);
 app.use("/api/v1", authMiddleware, paymentRouter);
+app.use("/api/v1", authMiddleware, ordersRouter);
 
 app.use(NotFoundMiddleware);
 app.use(ErrorHandlerMiddleware);
