@@ -45,7 +45,9 @@ const issueVerificationOtp = async (user: {
   user.emailVerificationOtpExpires = new Date(Date.now() + OTP_TTL_MS);
   user.emailVerificationAttempts = 0;
   await user.save();
-  await sendVerificationEmail(user.email, otp, verificationUrl(user.email));
+  void sendVerificationEmail(user.email, otp, verificationUrl(user.email)).catch(
+    (error) => console.error("Could not send verification email", error)
+  );
 };
 
 const issuePasswordResetOtp = async (user: {
@@ -64,7 +66,9 @@ const issuePasswordResetOtp = async (user: {
   user.passwordResetOtpExpires = new Date(Date.now() + OTP_TTL_MS);
   user.passwordResetAttempts = 0;
   await user.save();
-  await sendPasswordResetEmail(user.email, otp, resetUrl(user.email));
+  void sendPasswordResetEmail(user.email, otp, resetUrl(user.email)).catch(
+    (error) => console.error("Could not send password reset email", error)
+  );
 };
 
 const register = async (req: Request, res: Response) => {
@@ -81,7 +85,11 @@ const register = async (req: Request, res: Response) => {
   try {
     await issueVerificationOtp(user);
   } catch (error) {
-    console.error("Could not send verification email", error);
+    console.error("Could not issue verification code", error);
+  }
+
+  if (res.headersSent) {
+    return;
   }
 
   res.status(StatusCodes.CREATED).json({
@@ -116,7 +124,13 @@ const login = async (req: Request, res: Response) => {
     try {
       await issueVerificationOtp(user);
     } catch (error) {
-      console.error("Could not resend verification email", error);
+      if (!(error instanceof BadRequestError)) {
+        console.error("Could not resend verification email", error);
+      }
+    }
+
+    if (res.headersSent) {
+      return;
     }
 
     return res.status(StatusCodes.FORBIDDEN).json({
@@ -231,6 +245,10 @@ const forgotPassword = async (req: Request, res: Response) => {
     } catch (error) {
       console.error("Could not send password reset email", error);
     }
+  }
+
+  if (res.headersSent) {
+    return;
   }
 
   res.status(StatusCodes.OK).json({

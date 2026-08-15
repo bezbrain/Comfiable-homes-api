@@ -1,4 +1,6 @@
+import dns from "dns";
 import nodemailer from "nodemailer";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import config from "../config/config";
 
 const formatNaira = (value: number) =>
@@ -31,13 +33,35 @@ const getTransporter = () => {
     return null;
   }
   if (!transporter) {
-    transporter = nodemailer.createTransport({
-      service: "gmail",
+    // Render cannot reach Gmail over IPv6/port 465. Prefer IPv4 and STARTTLS 587.
+    dns.setDefaultResultOrder("ipv4first");
+    const smtpOptions: SMTPTransport.Options = {
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      requireTLS: true,
+      connectionTimeout: 15000,
+      greetingTimeout: 15000,
+      socketTimeout: 20000,
       auth: {
         user: config.emailUser,
         pass: config.emailPass,
       },
-    });
+    };
+    transporter = nodemailer.createTransport({
+      ...smtpOptions,
+      lookup: (
+        hostname: string,
+        _options: unknown,
+        callback: (
+          err: NodeJS.ErrnoException | null,
+          address: string,
+          family: number
+        ) => void
+      ) => {
+        dns.lookup(hostname, { family: 4 }, callback);
+      },
+    } as SMTPTransport.Options);
   }
   return transporter;
 };
