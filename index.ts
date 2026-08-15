@@ -20,6 +20,7 @@ import cartRouter from "./routes/cart.route";
 import cartControllerRouter from "./routes/cartController.route";
 import addressRouter from "./routes/address.route";
 import paymentRouter from "./routes/payment.route";
+import paymentPublicRouter from "./routes/paymentPublic.route";
 import ordersRouter from "./routes/orders.route";
 import newsletterRouter from "./routes/newsletter.route";
 import statsRouter from "./routes/stats.route";
@@ -63,6 +64,8 @@ app.use("/api/v1", authMiddleware, statsRouter);
 app.use("/api/v1", authMiddleware, cartRouter);
 app.use("/api/v1", authMiddleware, cartControllerRouter);
 app.use("/api/v1/checkout", authMiddleware, addressRouter);
+// Webhook first, and without auth — Paystack cannot send a user JWT.
+app.use("/api/v1", paymentPublicRouter);
 app.use("/api/v1", authMiddleware, paymentRouter);
 app.use("/api/v1", authMiddleware, ordersRouter);
 

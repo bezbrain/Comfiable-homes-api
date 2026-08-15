@@ -1,14 +1,10 @@
 import express from "express";
-import {
-  acceptPayment,
-  paymentWebhook,
-  paymentCallback,
-} from "../controllers/payment.controller";
+import { acceptPayment, verifyPayment } from "../controllers/payment.controller";
 
 const router = express.Router();
 
+// These need a logged-in shopper (JWT).
 router.post("/acceptPayment", acceptPayment);
-router.post("/webhook", paymentWebhook);
-router.get("/paystack/paymentCallback", paymentCallback);
+router.get("/verifyPayment/:reference", verifyPayment);
 
 export default router;

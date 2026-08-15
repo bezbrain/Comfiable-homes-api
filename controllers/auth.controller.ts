@@ -7,7 +7,8 @@ import UnauthenticatedError from "../errors/unauthenticated";
 export let revokedTokens: string[] = [];
 
 const register = async (req: Request, res: Response) => {
-  const user = await UserCollection.create(req.body);
+  const { username, email, password } = req.body;
+  const user = await UserCollection.create({ username, email, password });
   const token = user.createJWT();
 
   res.status(StatusCodes.CREATED).json({
@@ -15,6 +16,7 @@ const register = async (req: Request, res: Response) => {
     message: "User registration successful",
     token,
     user: user.username,
+    isAdmin: user.isAdmin,
   });
 };
 
@@ -46,6 +48,7 @@ const login = async (req: Request, res: Response) => {
     message: "User login successful",
     token,
     user: user.username,
+    isAdmin: user.isAdmin,
   });
 };
 
@@ -69,4 +72,21 @@ const logout = async (req: Request, res: Response) => {
   });
 };
 
-export { register, login, logout };
+const getMe = async (req: Request, res: Response) => {
+  const user = await UserCollection.findById(req.user?.userId).select(
+    "username isAdmin"
+  );
+
+  if (!user) {
+    throw new UnauthenticatedError("User not found");
+  }
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: "User retrieved",
+    user: user.username,
+    isAdmin: Boolean(user.isAdmin),
+  });
+};
+
+export { register, login, logout, getMe };

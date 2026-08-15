@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 interface AuthTokenPayload {
   userId: string;
   username: string;
+  isAdmin?: boolean;
 }
 
 const authMiddleware = async (
@@ -33,8 +34,8 @@ const authMiddleware = async (
       extractToken,
       process.env.JWT_SECRET as string
     ) as AuthTokenPayload;
-    const { userId, username } = payload;
-    req.user = { userId, username };
+    const { userId, username, isAdmin } = payload;
+    req.user = { userId, username, isAdmin };
     next();
   } catch (error) {
     throw new UnauthenticatedError(

@@ -35,6 +35,7 @@ export interface IOrder {
   email?: string;
   address?: IOrderAddress;
   reference?: string;
+  completedAt?: Date;
 }
 
 const OrderItemSchema = new Schema<IOrderItem>(
@@ -97,6 +98,7 @@ const OrderSchema = new Schema<IOrder>(
     email: String,
     address: OrderAddressSchema,
     reference: String,
+    completedAt: Date,
   },
   { timestamps: true }
 );

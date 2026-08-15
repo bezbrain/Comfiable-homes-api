@@ -8,5 +8,6 @@ declare namespace NodeJS {
     JWT_LIFETIME?: string;
     PAYSTACK_SECRET_KEY?: string;
     PAYSTACK_BASE_URL?: string;
+    FRONTEND_URL?: string;
   }
 }

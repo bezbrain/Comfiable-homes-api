@@ -6,6 +6,7 @@ export interface IUser {
   username: string;
   email: string;
   password: string;
+  isAdmin: boolean;
 }
 
 export interface IUserMethods {
@@ -42,6 +43,11 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>({
     required: [true, "Please provide password"],
     minlength: [6, "Password character cannot be less than 6"],
   },
+
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 UserSchema.pre("save", async function (next) {
@@ -52,7 +58,7 @@ UserSchema.pre("save", async function (next) {
 
 UserSchema.methods.createJWT = function () {
   return jwt.sign(
-    { userId: this._id, username: this.username },
+    { userId: this._id, username: this.username, isAdmin: this.isAdmin },
     process.env.JWT_SECRET as string,
     { expiresIn: process.env.JWT_LIFETIME as SignOptions["expiresIn"] }
   );

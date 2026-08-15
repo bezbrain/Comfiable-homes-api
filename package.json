@@ -8,7 +8,8 @@
     "build": "tsc",
     "postinstall": "npm run build",
     "start": "node dist/index.js",
-    "populate": "tsx populate.ts"
+    "populate": "tsx populate.ts",
+    "migrate:naira-prices": "tsx migrations/multiply-product-prices.ts"
   },
   "keywords": [],
   "author": "",
