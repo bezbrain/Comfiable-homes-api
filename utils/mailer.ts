@@ -33,7 +33,6 @@ const getTransporter = () => {
     return null;
   }
   if (!transporter) {
-    // Render cannot reach Gmail over IPv6/port 465. Prefer IPv4 and STARTTLS 587.
     dns.setDefaultResultOrder("ipv4first");
     const smtpOptions: SMTPTransport.Options = {
       host: "smtp.gmail.com",
@@ -48,25 +47,44 @@ const getTransporter = () => {
         pass: config.emailPass,
       },
     };
-    transporter = nodemailer.createTransport({
-      ...smtpOptions,
-      lookup: (
-        hostname: string,
-        _options: unknown,
-        callback: (
-          err: NodeJS.ErrnoException | null,
-          address: string,
-          family: number
-        ) => void
-      ) => {
-        dns.lookup(hostname, { family: 4 }, callback);
-      },
-    } as SMTPTransport.Options);
+    transporter = nodemailer.createTransport(smtpOptions);
   }
   return transporter;
 };
 
-export const sendMail = async ({
+const sendViaResend = async ({
+  to,
+  subject,
+  html,
+  text,
+}: {
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+}) => {
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${config.resendApiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: "ComfiableHomes <beth.t@example.com>",
+      to: [to],
+      subject,
+      html,
+      text,
+    }),
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Resend failed: ${response.status} ${body}`);
+  }
+};
+
+const sendViaGmail = async ({
   to,
   subject,
   html,
@@ -82,7 +100,7 @@ export const sendMail = async ({
   const mailer = getTransporter();
   if (!mailer) {
     console.warn(
-      `[email:dev] EMAIL_USER or EMAIL_PASS is missing. OTP was not emailed to ${to}${
+      `[email:dev] No email provider is configured. OTP was not emailed to ${to}${
         debugCode ? `: ${debugCode}` : ""
       }`
     );
@@ -96,7 +114,29 @@ export const sendMail = async ({
     html,
     text,
   });
-  console.log(`[email] Sent "${subject}" to ${to}`);
+};
+
+export const sendMail = async ({
+  to,
+  subject,
+  html,
+  text,
+  debugCode,
+}: {
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+  debugCode?: string;
+}) => {
+  if (config.resendApiKey) {
+    await sendViaResend({ to, subject, html, text });
+    console.log(`[email] Sent "${subject}" to ${to} via Resend`);
+    return;
+  }
+
+  await sendViaGmail({ to, subject, html, text, debugCode });
+  console.log(`[email] Sent "${subject}" to ${to} via Gmail SMTP`);
 };
 
 export const sendVerificationEmail = (to: string, otp: string, actionUrl: string) =>

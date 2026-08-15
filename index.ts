@@ -83,11 +83,15 @@ const startDB = async () => {
     await connectDB(process.env.MONGO_URI as string);
     const server = app.listen(port, () => {
       console.log(`Server is listening on port ${port}`);
-      if (config.emailUser && config.emailPass) {
-        console.log(`Email is configured for ${config.emailUser}`);
+      if (config.resendApiKey) {
+        console.log("Email will send via Resend HTTPS");
+      } else if (config.emailUser && config.emailPass) {
+        console.log(
+          `Email will send via Gmail SMTP for ${config.emailUser}. Render free web services block SMTP; set RESEND_API_KEY for production.`
+        );
       } else {
         console.warn(
-          "Email is not configured. Set EMAIL_USER and EMAIL_PASS, then restart. OTPs will only print in the terminal."
+          "Email is not configured. Set RESEND_API_KEY (Render) or EMAIL_USER and EMAIL_PASS (local)."
         );
       }
     });

@@ -17,6 +17,7 @@ const config = {
   emailUser,
   emailPass,
   emailFrom: process.env.EMAIL_FROM?.trim() || emailUser,
+  resendApiKey: process.env.RESEND_API_KEY?.trim(),
 };
 
 export default config;
