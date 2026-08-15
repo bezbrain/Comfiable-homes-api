@@ -22,6 +22,10 @@ const config = {
     process.env.RESEND_FROM?.trim() ||
     process.env.EMAIL_FROM?.trim() ||
     "ComfiableHomes <hello@dezxi.com>",
+  emailReplyTo:
+    process.env.EMAIL_REPLY_TO?.trim() ||
+    emailUser ||
+    "comfiablehomes@gmail.com",
 };
 
 export default config;

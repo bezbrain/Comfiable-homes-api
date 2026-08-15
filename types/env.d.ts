@@ -14,5 +14,6 @@ declare namespace NodeJS {
     EMAIL_FROM?: string;
     RESEND_API_KEY?: string;
     RESEND_FROM?: string;
+    EMAIL_REPLY_TO?: string;
   }
 }

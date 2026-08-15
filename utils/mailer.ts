@@ -71,6 +71,7 @@ const sendViaResend = async ({
     },
     body: JSON.stringify({
       from: config.resendFrom,
+      reply_to: config.emailReplyTo,
       to: [to],
       subject,
       html,
@@ -109,6 +110,7 @@ const sendViaGmail = async ({
 
   await mailer.sendMail({
     from: `"ComfiableHomes" <${config.emailFrom}>`,
+    replyTo: config.emailReplyTo,
     to,
     subject,
     html,
